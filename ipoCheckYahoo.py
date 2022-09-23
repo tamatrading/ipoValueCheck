@@ -32,6 +32,7 @@ def ipoCheckYahoo():
         order_one = []
         jojobi = info.contents[1].contents[0].strip()
         if '/' in jojobi:   #'mm/dd'であるか？
+            #if '09/28' == jojobi:  # 本日上場のIPO銘柄であるか?
             if today.strftime("%m/%d") == jojobi:  # 本日上場のIPO銘柄であるか?
                 print(today)
                 kobetu_url = info.find('a').get('href')
@@ -39,7 +40,15 @@ def ipoCheckYahoo():
                 print(kobetu_url)
                 kobetu = requests.get(kobetu_url)
                 ksoup = BeautifulSoup(kobetu.text, "html.parser")
-
+                kmeigara = ksoup.find('h1', class_='stock_name mb-2')
+                print(kmeigara.text)
+                order_one.append(kmeigara.text)
+                #soup.selectでは、"> tbody" を消して設定する。
+                kele = ksoup.select('#content_area > div.container-fluid > div > div.col-md-8.col-sm-12.content_main > div:nth-child(1) > div:nth-child(4) > div.d-flex.flex-md-nowrap.flex-wrap > div:nth-child(2) > table > tr:nth-child(5) > td')
+                kprice = kele[0].contents[0]
+                order_one.append(kprice)
+                print(kprice)
+                orderList.append(order_one)
 
 #        in_date = datetime.datetime.strptime(elems[0].contents[0], '%Y/%m/%d')
 #        if today == in_date.date():  # 本日上場のIPO銘柄であるか?
