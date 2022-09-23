@@ -21,31 +21,42 @@ def sendIpoMail(type):
 
 def ipoCheckYahoo():
 
-    top_url = "https://info.finance.yahoo.co.jp/ipo/"
+    top_url = "https://www.traders.co.jp/ipo/"
     res = requests.get(top_url)
     soup = BeautifulSoup(res.text, "html.parser")
-    ipo_infos = soup.find_all('div', class_='ipoBrandBox')
+    ipo_infos = soup.select('#content_area > div.container-fluid > div > div.col-md-8.col-sm-12.content_main > div:nth-child(1) > div:nth-child(6) > div.scrollable.mb-1 > table > tbody > tr')
+#    ipo_infos = soup.find_all('th', class_='text-nowrap')
     print(len(ipo_infos))
 
     for info in ipo_infos:
         order_one = []
-        elems = info.select('table > tr:nth-of-type(1) > td.presentation > p > span')
-        in_date = datetime.datetime.strptime(elems[0].contents[0], '%Y/%m/%d')
-        if today == in_date.date():  # 本日上場のIPO銘柄であるか?
-            kobetu_url = info.select_one('table > tr:nth-of-type(1) > td.ttl > h2 > a').get('href')
-            kobetu = requests.get(kobetu_url)
-            ksoup = BeautifulSoup(kobetu.text, "html.parser")
+        jojobi = info.contents[1].contents[0].strip()
+        if '/' in jojobi:   #'mm/dd'であるか？
+            if today.strftime("%m/%d") == jojobi:  # 本日上場のIPO銘柄であるか?
+                print(today)
+                kobetu_url = info.find('a').get('href')
+                kobetu_url = "https://www.traders.co.jp" + kobetu_url
+                print(kobetu_url)
+                kobetu = requests.get(kobetu_url)
+                ksoup = BeautifulSoup(kobetu.text, "html.parser")
 
-            print("==============================")
-            kmeigara = ksoup.find('h1', class_='stock_name mb-2')
-            order_one.append(kmeigara.text)
-            print(kmeigara.text)
-            kele = ksoup.select(
-                "#content_area > div.container-fluid > div > div.col-md-8.col-sm-12.content_main > div:nth-of-type(1) > div:nth-of-type(5) > div.d-flex.flex-md-nowrap.flex-wrap > div:nth-of-type(2) > table > tr:nth-of-type(5) > td")
-            kprice = kele[0].contents[0]
-            order_one.append(kprice)
-            print(kprice)
-            orderList.append(order_one)
+
+#        in_date = datetime.datetime.strptime(elems[0].contents[0], '%Y/%m/%d')
+#        if today == in_date.date():  # 本日上場のIPO銘柄であるか?
+#            kobetu_url = info.select_one('table > tr:nth-of-type(1) > td.ttl > h2 > a').get('href')
+#            kobetu = requests.get(kobetu_url)
+#            ksoup = BeautifulSoup(kobetu.text, "html.parser")
+#
+#            print("==============================")
+#            kmeigara = ksoup.find('h1', class_='stock_name mb-2')
+#            order_one.append(kmeigara.text)
+#            print(kmeigara.text)
+#            kele = ksoup.select(
+#                "#content_area > div.container-fluid > div > div.col-md-8.col-sm-12.content_main > div:nth-of-type(1) > div:nth-of-type(5) > div.d-flex.flex-md-nowrap.flex-wrap > div:nth-of-type(2) > table > tr:nth-of-type(5) > td")
+#            kprice = kele[0].contents[0]
+#            order_one.append(kprice)
+#            print(kprice)
+#            orderList.append(order_one)
 
     # print(orderList)
 
