@@ -9,24 +9,38 @@ from gmail import sendGmail
 MAIL_ADR = 'mtake88@gmail.com'
 MAIL_PWD = 'jnfzzdwkghwmrgkm'
 
+errNumber = 0
+
 #-----------------------------
 # gmail送信
 #-----------------------------
 def sendIpoMail(type):
-    subject = f'【IPO初値】本日({today})：{len(orderList)}件'
-    bodyText = '本日のIPO初値状況\n\n'
-    for ll in orderList:
-        bodyText += f"■{ll[0]}  初値：{ll[1]}\n"
+    global errNumber
+
+    if errNumber == 0:
+        subject = f'【IPO初値】本日({today})：{len(orderList)}件'
+        bodyText = '本日のIPO初値状況\n\n'
+        for ll in orderList:
+            bodyText += f"■{ll[0]}  初値：{ll[1]}\n"
+    elif errNumber == -1:
+        subject = f'【IPO初値】データの読み込みに失敗した可能性があります。'
+        bodyText = 'データ参照元のページ構成が更新された可能性があります。\n\nソースコードを確認してください。\n'
+
     sendGmail(MAIL_ADR, MAIL_ADR, MAIL_ADR, MAIL_PWD, subject, bodyText)
 
 def ipoCheckYahoo():
+    global errNumber
 
     top_url = "https://www.traders.co.jp/ipo/"
     res = requests.get(top_url)
     soup = BeautifulSoup(res.text, "html.parser")
-    ipo_infos = soup.select('#content_area > div.container-fluid > div > div.col-md-8.col-sm-12.content_main > div:nth-child(1) > div:nth-child(6) > div.scrollable.mb-1 > table > tbody > tr')
+    ipo_infos = soup.select('#content_area > div.container-fluid > div > div.col-md-8.col-sm-12.content_main > div:nth-child(1) > div:nth-child(5) > div.scrollable.mb-1 > table > tbody > tr')
+#    ipo_infos = soup.select('#content_area > div.container-fluid > div > div.col-md-8.col-sm-12.content_main > div:nth-child(1) > div:nth-child(6) > div.scrollable.mb-1 > table > tbody > tr')
 #    ipo_infos = soup.find_all('th', class_='text-nowrap')
     print(len(ipo_infos))
+
+    if len(ipo_infos) == 0:
+        errNumber = -1
 
     for info in ipo_infos:
         order_one = []
@@ -49,25 +63,6 @@ def ipoCheckYahoo():
                 order_one.append(kprice)
                 print(kprice)
                 orderList.append(order_one)
-
-#        in_date = datetime.datetime.strptime(elems[0].contents[0], '%Y/%m/%d')
-#        if today == in_date.date():  # 本日上場のIPO銘柄であるか?
-#            kobetu_url = info.select_one('table > tr:nth-of-type(1) > td.ttl > h2 > a').get('href')
-#            kobetu = requests.get(kobetu_url)
-#            ksoup = BeautifulSoup(kobetu.text, "html.parser")
-#
-#            print("==============================")
-#            kmeigara = ksoup.find('h1', class_='stock_name mb-2')
-#            order_one.append(kmeigara.text)
-#            print(kmeigara.text)
-#            kele = ksoup.select(
-#                "#content_area > div.container-fluid > div > div.col-md-8.col-sm-12.content_main > div:nth-of-type(1) > div:nth-of-type(5) > div.d-flex.flex-md-nowrap.flex-wrap > div:nth-of-type(2) > table > tr:nth-of-type(5) > td")
-#            kprice = kele[0].contents[0]
-#            order_one.append(kprice)
-#            print(kprice)
-#            orderList.append(order_one)
-
-    # print(orderList)
 
 if __name__ == "__main__":
     orderList = []  # 注文内容をメールで送信
