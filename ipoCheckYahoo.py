@@ -35,12 +35,13 @@ def ipoCheckYahoo():
     res = requests.get(top_url)
     soup = BeautifulSoup(res.text, "html.parser")
     ipo_infos = soup.select('#content_area > div.container-fluid > div > div.col-md-8.col-sm-12.content_main > div:nth-child(1) > div:nth-child(5) > div.scrollable.mb-1 > table > tbody > tr')
-#    ipo_infos = soup.select('#content_area > div.container-fluid > div > div.col-md-8.col-sm-12.content_main > div:nth-child(1) > div:nth-child(6) > div.scrollable.mb-1 > table > tbody > tr')
 #    ipo_infos = soup.find_all('th', class_='text-nowrap')
     print(len(ipo_infos))
 
     if len(ipo_infos) == 0:
-        errNumber = -1
+        ipo_infos = soup.select('#content_area > div.container-fluid > div > div.col-md-8.col-sm-12.content_main > div:nth-child(1) > div:nth-child(6) > div.scrollable.mb-1 > table > tbody > tr')
+        if len(ipo_infos) == 0:
+            errNumber = -1
 
     for info in ipo_infos:
         order_one = []
