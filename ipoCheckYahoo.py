@@ -59,7 +59,7 @@ def ipoCheckYahoo():
                 print(kmeigara.text)
                 order_one.append(kmeigara.text)
                 #soup.selectでは、"> tbody" を消して設定する。
-                kele = ksoup.select('#content_area > div.container-fluid > div > div.col-md-8.col-sm-12.content_main > div:nth-child(1) > div:nth-child(4) > div.d-flex.flex-md-nowrap.flex-wrap > div:nth-child(2) > table > tr:nth-child(5) > td')
+                kele = ksoup.select('#content_area > div.container-fluid > div > div.col-md-8.col-sm-12.content_main > div:nth-child(1) > div:nth-child(4) > div.d-flex.flex-md-nowrap.flex-wrap > div:nth-child(2) > table > tr:nth-child(6) > td')
                 kprice = kele[0].contents[0]
                 order_one.append(kprice)
                 print(kprice)
