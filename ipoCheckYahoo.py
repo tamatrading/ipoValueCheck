@@ -21,7 +21,11 @@ def sendIpoMail(type):
         subject = f'【IPO初値】本日({today})：{len(orderList)}件'
         bodyText = '本日のIPO初値状況\n\n'
         for ll in orderList:
-            bodyText += f"■{ll[0]}  初値：{ll[1]}\n"
+            if str(ll[4]="*"):
+                bodyText += f"■{ll[0]}({ll[1]})  初値：{ll[3]}\n"
+            else:
+                bodyText += f"■{ll[0]}({ll[1]})  初値：{ll[3]} ({ll[4]})\n"
+
     elif errNumber == -1:
         subject = f'【IPO初値】データの読み込みに失敗した可能性があります。'
         bodyText = 'データ参照元のページ構成が更新された可能性があります。\n\nソースコードを確認してください。\n'
@@ -47,8 +51,8 @@ def ipoCheckYahoo():
         order_one = []
         jojobi = info.contents[1].contents[0].strip()
         if '/' in jojobi:   #'mm/dd'であるか？
-            #if '09/28' == jojobi:  # 本日上場のIPO銘柄であるか?
-            if today.strftime("%m/%d") == jojobi:  # 本日上場のIPO銘柄であるか?
+            if '04/14' == jojobi:  # 本日上場のIPO銘柄であるか?
+            #if today.strftime("%m/%d") == jojobi:  # 本日上場のIPO銘柄であるか?
                 print(today)
                 kobetu_url = info.find('a').get('href')
                 kobetu_url = "https://www.traders.co.jp" + kobetu_url
@@ -58,11 +62,31 @@ def ipoCheckYahoo():
                 kmeigara = ksoup.find('h1', class_='stock_name mb-2')
                 print(kmeigara.text)
                 order_one.append(kmeigara.text)
+
                 #soup.selectでは、"> tbody" を消して設定する。
+                kele = ksoup.select('#content_area > div.container-fluid > div > div.col-md-8.col-sm-12.content_main > div:nth-child(1) > div:nth-child(3) > table > tbody > tr:nth-child(2) > td:nth-child(1)')
+                kcode = kele[0].contents[0]
+                order_one.append(kcode)
+                print(kcode)
+
+                kele = ksoup.select('#content_area > div.container-fluid > div > div.col-md-8.col-sm-12.content_main > div:nth-child(1) > div:nth-child(4) > div.d-flex.flex-md-nowrap.flex-wrap > div:nth-child(2) > table > tr:nth-child(4) > td')
+                kkokai = kele[0].contents[0].replace("円","")
+                kkokai = kkokai.replace(",","")
+                order_one.append(kkokai)
+                print(kkokai)
+
                 kele = ksoup.select('#content_area > div.container-fluid > div > div.col-md-8.col-sm-12.content_main > div:nth-child(1) > div:nth-child(4) > div.d-flex.flex-md-nowrap.flex-wrap > div:nth-child(2) > table > tr:nth-child(6) > td')
                 kprice = kele[0].contents[0]
                 order_one.append(kprice)
                 print(kprice)
+
+                if str(kprice).isdigit():
+                    kupdw = int(kprice) - int(kkokai)
+                else:
+                    kupdw = "*"
+                order_one.append(kupdw)
+                print(kupdw)
+
                 orderList.append(order_one)
 
 if __name__ == "__main__":
