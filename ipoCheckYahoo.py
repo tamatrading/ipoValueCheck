@@ -21,10 +21,10 @@ def sendIpoMail(type):
         subject = f'【IPO初値】本日({today})：{len(orderList)}件'
         bodyText = '本日のIPO初値状況\n\n'
         for ll in orderList:
-            if str(ll[4]="*"):
-                bodyText += f"■{ll[0]}({ll[1]})  初値：{ll[3]}\n"
+            if str(ll[4])=="*":
+                bodyText += f"■[{ll[1]}] {ll[0]}  初値：{ll[3]}\n"
             else:
-                bodyText += f"■{ll[0]}({ll[1]})  初値：{ll[3]} ({ll[4]})\n"
+                bodyText += f"■[{ll[1]}] {ll[0]}  初値：{ll[3]} ({ll[4]:+})\n"
 
     elif errNumber == -1:
         subject = f'【IPO初値】データの読み込みに失敗した可能性があります。'
@@ -51,8 +51,8 @@ def ipoCheckYahoo():
         order_one = []
         jojobi = info.contents[1].contents[0].strip()
         if '/' in jojobi:   #'mm/dd'であるか？
-            if '04/14' == jojobi:  # 本日上場のIPO銘柄であるか?
-            #if today.strftime("%m/%d") == jojobi:  # 本日上場のIPO銘柄であるか?
+            #if '04/14' == jojobi:  # 本日上場のIPO銘柄であるか?
+            if today.strftime("%m/%d") == jojobi:  # 本日上場のIPO銘柄であるか?
                 print(today)
                 kobetu_url = info.find('a').get('href')
                 kobetu_url = "https://www.traders.co.jp" + kobetu_url
