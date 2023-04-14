@@ -76,7 +76,8 @@ def ipoCheckYahoo():
                 print(kkokai)
 
                 kele = ksoup.select('#content_area > div.container-fluid > div > div.col-md-8.col-sm-12.content_main > div:nth-child(1) > div:nth-child(4) > div.d-flex.flex-md-nowrap.flex-wrap > div:nth-child(2) > table > tr:nth-child(6) > td')
-                kprice = kele[0].contents[0]
+                kprice = kele[0].contents[0].replace("円","")
+                kprice = kprice.replace(",", "")
                 order_one.append(kprice)
                 print(kprice)
 
