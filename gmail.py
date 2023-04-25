@@ -6,7 +6,7 @@ from email.utils import formatdate
 #-----------------------------
 # gmail送信
 #-----------------------------
-def sendGmail(fromAddress, toAddress, sendAddress, password, subject, bodyText):
+def sendGmail(fromAddress, toAddress, bccAddress, sendAddress, password, subject, bodyText):
 
     # SMTPサーバに接続
     smtpobj = smtplib.SMTP('smtp.gmail.com', 587)
@@ -18,6 +18,7 @@ def sendGmail(fromAddress, toAddress, sendAddress, password, subject, bodyText):
     msg['Subject'] = subject
     msg['From'] = fromAddress
     msg['To'] = toAddress
+    msg['Bcc'] = bccAddress
     msg['Date'] = formatdate()
 
     # 作成したメールを送信

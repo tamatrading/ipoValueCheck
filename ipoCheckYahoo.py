@@ -8,6 +8,7 @@ from gmail import sendGmail
 
 MAIL_ADR = 'mtake88@gmail.com'
 MAIL_PWD = 'jnfzzdwkghwmrgkm'
+MAIL_BCC = 'aikawa.paopao2002@gmail.com'
 
 errNumber = 0
 
@@ -30,7 +31,7 @@ def sendIpoMail(type):
         subject = f'【IPO初値】データの読み込みに失敗した可能性があります。'
         bodyText = 'データ参照元のページ構成が更新された可能性があります。\n\nソースコードを確認してください。\n'
 
-    sendGmail(MAIL_ADR, MAIL_ADR, MAIL_ADR, MAIL_PWD, subject, bodyText)
+    sendGmail(MAIL_ADR, MAIL_ADR, MAIL_BCC, MAIL_ADR, MAIL_PWD, subject, bodyText)
 
 def ipoCheckYahoo():
     global errNumber
