@@ -46,7 +46,12 @@ def ipoCheckYahoo():
     if len(ipo_infos) == 0:
         ipo_infos = soup.select('#content_area > div.container-fluid > div > div.col-md-8.col-sm-12.content_main > div:nth-child(1) > div:nth-child(6) > div.scrollable.mb-1 > table > tbody > tr')
         if len(ipo_infos) == 0:
-            errNumber = -1
+            ipo_infos = soup.select('#content_area > div.container-fluid > div > div.col-md-8.col-sm-12.content_main > div:nth-child(1) > div:nth-child(5) > div.no_data.mb-3')
+            if len(ipo_infos) == 1:
+                if ipo_infos[0].text.find('IPO予定の銘柄はありません') > 0:
+                    ipo_infos.clear()
+                else:
+                    errNumber = -1
 
     for info in ipo_infos:
         order_one = []
