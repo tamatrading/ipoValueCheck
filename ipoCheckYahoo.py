@@ -12,6 +12,13 @@ MAIL_BCC = 'aikawa.paopao2002@gmail.com'
 
 errNumber = 0
 
+# -----------------------------
+# result.txtに指定された文字列を書く。ファイルがない場合には作成し、すでにある場合は上書きする。
+# -----------------------------
+def write_to_result_file(text: str):
+    with open("ipo_price.txt", "w") as file:
+        file.write(text)
+
 #-----------------------------
 # gmail送信
 #-----------------------------
@@ -32,6 +39,11 @@ def sendIpoMail(type):
         bodyText = 'データ参照元のページ構成が更新された可能性があります。\n\nソースコードを確認してください。\n'
 
     sendGmail(MAIL_ADR, MAIL_ADR, MAIL_BCC, MAIL_ADR, MAIL_PWD, subject, bodyText)
+
+    now = datetime.datetime.now()  # 現在時刻の取得
+    tttoday = now.strftime('%Y年%m月%d日 %H:%M:%S')  # 現在時刻を年月曜日で表示
+
+    write_to_result_file(f"--- {tttoday} ---\n\n■{subject}\n\n{bodyText}")
 
 def ipoCheckYahoo():
     global errNumber
