@@ -76,12 +76,18 @@ def ipoCheckYahoo():
                 print(kcode)
 
                 kele = ksoup.select('#content_area > div.container-fluid > div > div.col-md-8.col-sm-12.content_main > div:nth-child(1) > div:nth-child(4) > div.d-flex.flex-md-nowrap.flex-wrap > div:nth-child(2) > table > tr:nth-child(4) > td')
+                if len(kele) == 0:
+                    kele = ksoup.select(
+                        '#content_area > div.container-fluid > div > div.col-md-8.col-sm-12.content_main > div:nth-child(1) > div:nth-child(5) > div.d-flex.flex-md-nowrap.flex-wrap > div:nth-child(2) > table > tr:nth-child(4) > td')
                 kkokai = kele[0].contents[0].replace("円","")
                 kkokai = kkokai.replace(",","")
                 order_one.append(kkokai)
                 print(kkokai)
 
                 kele = ksoup.select('#content_area > div.container-fluid > div > div.col-md-8.col-sm-12.content_main > div:nth-child(1) > div:nth-child(4) > div.d-flex.flex-md-nowrap.flex-wrap > div:nth-child(2) > table > tr:nth-child(6) > td')
+                if len(kele) == 0:
+                    kele = ksoup.select(
+                        '#content_area > div.container-fluid > div > div.col-md-8.col-sm-12.content_main > div:nth-child(1) > div:nth-child(5) > div.d-flex.flex-md-nowrap.flex-wrap > div:nth-child(2) > table > tr:nth-child(6) > td')
                 kprice = kele[0].contents[0].replace("円","")
                 kprice = kprice.replace(",", "")
                 order_one.append(kprice)
